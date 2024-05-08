@@ -18,6 +18,7 @@ if __name__ == '__main__':
         root_dir=args.root_dir,
         google_cloud_developer_key=args.google_cloud_developer_key,
         search_keyword=args.search_keyword,
+        clear_tmp=True,
         video_max_num=args.video_max_num
     )
 
