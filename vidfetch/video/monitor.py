@@ -92,3 +92,12 @@ class VideoMonitor:
             return True
         else:
             return False
+
+
+    def add_item_v2(self, video_info_dict: dict) -> bool:
+        # self.md5_list.append(video_info_dict['md5'])
+        video_uid = video_info_dict['uid']
+        self.videos[video_uid] = video_info_dict
+        self.last_video = video_info_dict
+        self.downloaded_url_list.append(video_info_dict['download_url'])
+        return True
