@@ -8,11 +8,10 @@ import subprocess
 
 
 class YoutubeVideoDataset(VideoDataset):
-    def __init__(self, root_dir: str, google_cloud_developer_key: str, search_keyword: str, clear_tmp: bool = True, start_page_token: str = None, video_max_num: int = 1000000):
+    def __init__(self, root_dir: str, google_cloud_developer_key: str, search_keyword: str, start_page_token: str = None, video_max_num: int = 1000000):
         super().__init__(
             website="youtube",
             root_dir=root_dir,
-            clear_tmp=clear_tmp
         )
         self.search_keyword = search_keyword
         self.start_page_token = start_page_token
