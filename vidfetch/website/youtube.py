@@ -5,10 +5,15 @@ from vidfetch.video import VideoDataset, VideoData
 from vidfetch.utils import download, get_md5
 from apiclient.discovery import build
 import subprocess
+import time
+import datetime
+from vidfetch.api.huggingface import push_file_to_hf
+import tarfile
 
 
 class YoutubeVideoDataset(VideoDataset):
-    def __init__(self, root_dir: str, google_cloud_developer_key: str, search_keyword: str, start_page_token: str = None, video_max_num: int = 1000000):
+    def __init__(self, root_dir: str, google_cloud_developer_key: str, search_keyword: str, hf_token: str, hf_ds_repo_id: str,
+                 start_page_token: str = None, video_max_num: int = 1000000):
         super().__init__(
             website="youtube",
             root_dir=root_dir,
@@ -17,6 +22,8 @@ class YoutubeVideoDataset(VideoDataset):
         self.start_page_token = start_page_token
         self.video_max_num = video_max_num
         self.cur_fetch_video_num = 0
+        self.hf_token = hf_token
+        self.hf_ds_repo_id = hf_ds_repo_id
 
         os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
         api_service_name = "youtube"
@@ -28,7 +35,9 @@ class YoutubeVideoDataset(VideoDataset):
             platform: str = "windows",
             restart: bool = False
     ):
-        print(f'begin to do download, search_keyword: {self.search_keyword}, video_max_num: {self.video_max_num}')
+        print(f'begin to do download, search_keyword: {self.search_keyword}, video_max_num: {self.video_max_num}, time: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+        start_time = time.time()
+
         last_video_info = self.monitor.last_video
         if last_video_info == dict():
             restart = True
@@ -69,6 +78,10 @@ class YoutubeVideoDataset(VideoDataset):
                 page_token = "last_page"
             else:
                 page_token = video_meta["next_page_token"]
+
+        self.compress_upload_hf()
+        print(f"video download success, search_keyword: {self.search_keyword}, fetch_video_num: {self.cur_fetch_video_num}, "
+              f"time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}, cost: {(time.time()-start_time)}s")
 
 
     def fetch_video_meta_with_api(self,
@@ -187,3 +200,18 @@ class YoutubeVideoDataset(VideoDataset):
             error_message = f"error occurred when the download url is {download_url}"
             self.log_error(error_message)
         return download_success
+
+
+    def compress_upload_hf(self):
+        output_filename = self.search_keyword + '.tar.gz'
+        with tarfile.open(output_filename, "w:gz") as tar:
+            tar.add(self.download_dir, arcname=os.path.basename(self.download_dir))
+
+
+
+        file_path = os.path.join(self.download_dir, output_filename)
+        path_in_repo = output_filename
+        push_file_to_hf(self.hf_token, self.hf_ds_repo_id, file_path, path_in_repo)
+
+        os.remove(self.download_dir)
+
