@@ -46,9 +46,9 @@ class YoutubeVideoDataset(VideoDataset):
             start_page_token = self.start_page_token
             page_start_idx = 0
         else:
-            start_page_token = last_video_info['last_page_token']
-            page_start_idx = last_video_info['last_page_start_idx']
-            self.cur_fetch_video_num = last_video_info['last_fetch_video_num']
+            start_page_token = last_video_info.get('last_page_token', None)
+            page_start_idx = last_video_info.get('last_page_start_idx', 0)
+            self.cur_fetch_video_num = last_video_info.get('last_fetch_video_num', 0)
             message = f"Starting from page: {start_page_token}, page_start_idx: {page_start_idx}..."
             print(message)
 
