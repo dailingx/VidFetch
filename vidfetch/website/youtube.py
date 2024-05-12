@@ -144,8 +144,8 @@ class YoutubeVideoDataset(VideoDataset):
         download_url = youtube_base_url + video_id
 
         # check if is downloaded sucessfully
-        if download_url in self.monitor.downloaded_url_list:
-            return
+        # if download_url in self.monitor.downloaded_url_list:
+        #     return
 
         # download
         tmp_filename = f"youtube_{self.search_keyword.replace(' ', '_')}_{page_token}_{str(idx)}_{video_id}_tmp.mp4"
