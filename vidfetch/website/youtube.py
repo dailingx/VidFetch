@@ -79,9 +79,12 @@ class YoutubeVideoDataset(VideoDataset):
             else:
                 page_token = video_meta["next_page_token"]
 
+        print(
+            f"video download success, search_keyword: {self.search_keyword}, fetch_video_num: {self.cur_fetch_video_num}, "
+            f"time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}, cost: {(time.time() - start_time)}s")
         self.compress_upload_hf()
-        print(f"video download success, search_keyword: {self.search_keyword}, fetch_video_num: {self.cur_fetch_video_num}, "
-              f"time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}, cost: {(time.time()-start_time)}s")
+        print(f"video compress and upload to hf success, search_keyword: {self.search_keyword}, fetch_video_num: {self.cur_fetch_video_num}, "
+              f"time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}, all-cost: {(time.time()-start_time)}s")
 
 
     def fetch_video_meta_with_api(self,
@@ -206,8 +209,6 @@ class YoutubeVideoDataset(VideoDataset):
         output_filename = self.search_keyword + '.tar.gz'
         with tarfile.open(output_filename, "w:gz") as tar:
             tar.add(self.download_dir, arcname=os.path.basename(self.download_dir))
-
-
 
         file_path = os.path.join(self.download_dir, output_filename)
         path_in_repo = output_filename
