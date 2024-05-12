@@ -199,6 +199,7 @@ class YoutubeVideoDataset(VideoDataset):
         command = ['youtube-dl', '-o', download_path, download_url]
         try:
             subprocess.run(command)
+            print(f"download_one_instance success, command: {command}")
         except:
             download_success = False
             error_message = f"error occurred when the download url is {download_url}"
