@@ -28,6 +28,7 @@ class YoutubeVideoDataset(VideoDataset):
             platform: str = "windows",
             restart: bool = False
     ):
+        print(f'begin to do download, search_keyword: {self.search_keyword}, video_max_num: {self.video_max_num}')
         last_video_info = self.monitor.last_video
         if last_video_info == dict():
             restart = True
