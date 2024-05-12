@@ -59,6 +59,7 @@ class YoutubeVideoDataset(VideoDataset):
                 return
 
             video_meta = self.fetch_video_meta_with_api(self.search_keyword, page_token)
+            print(f"search_keyword: {self.search_keyword}, page_token: {page_token}, video_meta: {video_meta}")
             video_ids = video_meta["video_ids"]
             if video_ids is None or len(video_ids) == 0:
                 break
