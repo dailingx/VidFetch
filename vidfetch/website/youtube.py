@@ -212,9 +212,8 @@ class YoutubeVideoDataset(VideoDataset):
         with tarfile.open(output_filename, "w:gz") as tar:
             tar.add(self.download_dir, arcname=os.path.basename(self.download_dir))
 
-        file_path = os.path.join(self.download_dir, output_filename)
         path_in_repo = output_filename
-        push_file_to_hf(self.hf_token, self.hf_ds_repo_id, file_path, path_in_repo)
+        push_file_to_hf(self.hf_token, self.hf_ds_repo_id, output_filename, path_in_repo)
 
         os.remove(self.download_dir)
 
