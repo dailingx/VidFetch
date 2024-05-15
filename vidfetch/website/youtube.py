@@ -204,6 +204,7 @@ class YoutubeVideoDataset(VideoDataset):
         except:
             download_success = False
             error_message = f"error occurred when the download url is {download_url}"
+            print(f"download_one_instance error, command: {command}")
             self.log_error(error_message)
         return download_success
 
