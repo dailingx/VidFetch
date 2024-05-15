@@ -142,8 +142,6 @@ class YoutubeVideoDataset(VideoDataset):
     ):
         youtube_base_url = "https://www.youtube.com/watch?v="
         download_url = youtube_base_url + video_id
-        # test
-        print(f"download_video will fetch from: {download_url}")
 
         # check if is downloaded sucessfully
         # if download_url in self.monitor.downloaded_url_list:
@@ -200,6 +198,7 @@ class YoutubeVideoDataset(VideoDataset):
         download_success = True
         command = ['youtube-dl', '-o', download_path, download_url]
         try:
+            print(f"download_one_instance begin, command: {command}")
             subprocess.run(command)
             print(f"download_one_instance success, command: {command}")
         except:
