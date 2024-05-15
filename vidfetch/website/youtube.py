@@ -201,10 +201,10 @@ class YoutubeVideoDataset(VideoDataset):
             print(f"download_one_instance begin, command: {command}")
             subprocess.run(command)
             print(f"download_one_instance success, command: {command}")
-        except:
+        except Exception as e:
             download_success = False
             error_message = f"error occurred when the download url is {download_url}"
-            print(f"download_one_instance error, command: {command}")
+            print(f"download_one_instance error, command: {command}, trace: {traceback.format_exc()}")
             self.log_error(error_message)
         return download_success
 
