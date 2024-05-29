@@ -132,7 +132,7 @@ class YoutubeVideoDataset(VideoDataset):
             try:
                 self.download_video(video_id, page_token, idx)
             except Exception as e:
-                print(f"download_video error, search_keyword: {self.search_keyword}, page_token: {page_token}, idx: {idx}, video_id: {video_id}")
+                print(f"download_video error, search_keyword: {self.search_keyword}, page_token: {page_token}, idx: {idx}, video_id: {video_id}, trace: {traceback.format_exc()}")
                 error_message = traceback.format_exc()
                 self.log_error(error_message)
 
