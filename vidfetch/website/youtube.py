@@ -56,7 +56,7 @@ class YoutubeVideoDataset(VideoDataset):
         while page_token != "last_page":
             if self.cur_fetch_video_num >= self.video_max_num:
                 print(f"youtube dataset has fetch {self.cur_fetch_video_num} videos, done!")
-                return
+                break
 
             video_meta = self.fetch_video_meta_with_api(self.search_keyword, page_token)
             print(f"search_keyword: {self.search_keyword}, page_token: {page_token}, video_meta: {video_meta}")
