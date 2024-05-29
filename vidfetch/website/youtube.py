@@ -91,13 +91,16 @@ class YoutubeVideoDataset(VideoDataset):
     def fetch_video_meta_with_api(self,
                                   keyword: str,
                                   page_token):
-        # youtube data api: https://developers.google.com/youtube/v3/docs/videos/list?hl=zh-cn#usage
+        # youtube data api: https://developers.google.com/youtube/v3/docs/search/list?hl=zh-cn
         request = self.youtube_api_client.search().list(
             q=keyword,
             type="video",
             part="id,snippet",
             videoLicense="creativeCommon",
             pageToken=page_token,
+            videoCaption="none",
+            videoDefinition="high",
+            videoDuration="short",
             # order="date",
             maxResults=50
         )
