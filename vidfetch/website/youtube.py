@@ -151,7 +151,7 @@ class YoutubeVideoDataset(VideoDataset):
         #     return
 
         # download
-        tmp_filename = f"youtube_{self.search_keyword.replace(' ', '_')}_{page_token}_{str(idx)}_{video_id}.mp4"
+        tmp_filename = f"youtube_{self.search_keyword.replace(' ', '_')}_{page_token}_{str(idx)}_{video_id}_tmp.mp4"
         tmp_download_path = os.path.join(self.tmp_dir, tmp_filename)
         download_success = self.download_one_instance(
             download_url=download_url,
@@ -164,7 +164,7 @@ class YoutubeVideoDataset(VideoDataset):
             return
 
         # md5 = get_md5(tmp_download_path)
-        save_path = os.path.join(self.download_dir, f"{video_id}.mp4")
+        save_path = os.path.join(self.download_dir, f"youtube_{self.search_keyword.replace(' ', '_')}_{self.cur_fetch_video_num+1}_{page_token}_{str(idx)}_{video_id}.mp4")
         shutil.move(tmp_download_path, save_path)
 
         self.cur_fetch_video_num = self.cur_fetch_video_num + 1
