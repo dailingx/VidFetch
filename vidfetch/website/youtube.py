@@ -205,6 +205,7 @@ class YoutubeVideoDataset(VideoDataset):
             print(f"download_one_instance begin, command: {command}")
             subprocess.run(command)
             print(f"download_one_instance success, command: {command}")
+            time.sleep(1)
         except Exception as e:
             download_success = False
             error_message = f"error occurred when the download url is {download_url}"
