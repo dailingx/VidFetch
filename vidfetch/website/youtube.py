@@ -168,6 +168,7 @@ class YoutubeVideoDataset(VideoDataset):
         shutil.move(tmp_download_path, save_path)
 
         self.cur_fetch_video_num = self.cur_fetch_video_num + 1
+        print(f"download_video success, num: {self.cur_fetch_video_num}, video_id: {video_id}, page_token: {page_token}")
         video_info_dict = {
             # "md5": md5,
             "uid": video_id,
