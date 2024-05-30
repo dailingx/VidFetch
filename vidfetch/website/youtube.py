@@ -151,7 +151,7 @@ class YoutubeVideoDataset(VideoDataset):
         #     return
 
         # download
-        tmp_filename = f"youtube_{self.search_keyword.replace(' ', '_')}_{page_token}_{str(idx)}_{video_id}_tmp.mp4"
+        tmp_filename = f"youtube_{self.search_keyword.replace(' ', '_')}_{page_token}_{str(idx)}_{video_id}.mp4"
         tmp_download_path = os.path.join(self.tmp_dir, tmp_filename)
         download_success = self.download_one_instance(
             download_url=download_url,
@@ -200,12 +200,12 @@ class YoutubeVideoDataset(VideoDataset):
             download_path: str
     ):
         download_success = True
-        command = ['youtube-dl', '-o', download_path, download_url]
+        command = ['youtube-dl', '-f', 'bestvideo[ext=mp4]', '-o', download_path, download_url]
         try:
             print(f"download_one_instance begin, command: {command}")
             subprocess.run(command)
             print(f"download_one_instance success, command: {command}")
-            time.sleep(1)
+            time.sleep(10)
         except Exception as e:
             download_success = False
             error_message = f"error occurred when the download url is {download_url}"
