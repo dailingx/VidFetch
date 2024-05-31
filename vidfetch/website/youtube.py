@@ -222,5 +222,6 @@ class YoutubeVideoDataset(VideoDataset):
         path_in_repo = output_filename
         push_file_to_hf(self.hf_token, self.hf_ds_repo_id, output_filename, path_in_repo)
 
+        os.remove(output_filename)
         shutil.rmtree(self.download_dir)
 
