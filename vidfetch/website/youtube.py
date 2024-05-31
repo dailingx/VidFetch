@@ -200,7 +200,7 @@ class YoutubeVideoDataset(VideoDataset):
             download_path: str
     ):
         download_success = True
-        command = ['youtube-dl', '-f', 'bestvideo[ext=mp4]', '-o', download_path, download_url]
+        command = ['youtube-dl', '--quiet', '-f', 'bestvideo[ext=mp4]', '-o', download_path, download_url]
         try:
             # print(f"download_one_instance begin, command: {command}")
             subprocess.run(command)
