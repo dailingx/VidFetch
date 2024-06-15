@@ -10,6 +10,7 @@ import datetime
 from vidfetch.api.huggingface import push_file_to_hf
 import tarfile
 import pandas as pd
+from moviepy.editor import VideoFileClip
 
 
 class YoutubeVideoDataset(VideoDataset):
@@ -169,6 +170,9 @@ class YoutubeVideoDataset(VideoDataset):
         # md5 = get_md5(tmp_download_path)
         save_path = os.path.join(self.download_dir, f"youtube_{self.search_keyword.replace(' ', '_')}_{self.cur_fetch_video_num+1}_{page_token}_{str(idx)}_{video_id}.mp4")
         shutil.move(tmp_download_path, save_path)
+        clip = VideoFileClip(save_path)
+        duration = clip.duration
+        print(f"视频时长{duration}")
 
         self.cur_fetch_video_num = self.cur_fetch_video_num + 1
         print(f"download_video success, num: {self.cur_fetch_video_num}, video_id: {video_id}, page_token: {page_token}")
@@ -235,7 +239,8 @@ class YoutubeVideoDataset(VideoDataset):
         video_column = []
         for filename in os.listdir(self.download_dir):
             file_base_name = os.path.splitext(filename)[0]
-            video_id_column.append(file_base_name)
+            video_id = file_base_name.split('_')[-1]
+            video_id_column.append(video_id)
             with open(os.path.join(self.download_dir, filename), "rb") as video_file:
                 video_content = video_file.read()
                 video_column.append(video_content)
