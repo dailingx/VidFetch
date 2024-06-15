@@ -176,6 +176,7 @@ def handle(
     print(f"all file in hf: {hf_file_list}")
 
     for filename in hf_file_list:
+        print(f"begin to process file: {filename}")
         clone_from_ms(ms_token, ms_repo, clone_dir)
         time.sleep(1)
         pull_from_hf(hf_token, hf_repo, filename)
@@ -183,6 +184,7 @@ def handle(
         move_file_from_local_to_clone_dir(filename, clone_dir)
         time.sleep(1)
         push_to_ms(USERNAME, EMAIL, ms_repo, clone_dir, filename)
+        print(f"process file finish: {filename}")
         time.sleep(10)
 
 
