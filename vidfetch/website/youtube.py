@@ -9,6 +9,7 @@ import time
 import datetime
 from vidfetch.api.huggingface import push_file_to_hf
 import tarfile
+import pandas as pd
 
 
 class YoutubeVideoDataset(VideoDataset):
@@ -24,6 +25,8 @@ class YoutubeVideoDataset(VideoDataset):
         self.cur_fetch_video_num = 0
         self.hf_token = hf_token
         self.hf_ds_repo_id = hf_ds_repo_id
+        # parquet info
+        self.video_column = []
 
         os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
         api_service_name = "youtube"
@@ -83,7 +86,7 @@ class YoutubeVideoDataset(VideoDataset):
         print(
             f"video download success, search_keyword: {self.search_keyword}, fetch_video_num: {self.cur_fetch_video_num}, "
             f"time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}, cost: {(time.time() - start_time)}s")
-        self.compress_upload_hf()
+        self.parquet_upload_hf()
         print(f"video compress and upload to hf success, search_keyword: {self.search_keyword}, fetch_video_num: {self.cur_fetch_video_num}, "
               f"time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}, all-cost: {(time.time()-start_time)}s")
 
@@ -218,6 +221,29 @@ class YoutubeVideoDataset(VideoDataset):
         output_filename = self.search_keyword + '.tar.gz'
         with tarfile.open(output_filename, "w:gz") as tar:
             tar.add(self.download_dir, arcname=os.path.basename(self.download_dir))
+
+        path_in_repo = output_filename
+        push_file_to_hf(self.hf_token, self.hf_ds_repo_id, output_filename, path_in_repo)
+
+        os.remove(output_filename)
+        shutil.rmtree(self.download_dir)
+
+
+    def parquet_upload_hf(self):
+        output_filename = self.search_keyword + '.parquet'
+        video_id_column = []
+        video_column = []
+        for filename in os.listdir(self.download_dir):
+            file_base_name = os.path.splitext(filename)[0]
+            video_id_column.append(file_base_name)
+            with open(os.path.join(self.download_dir, filename), "rb") as video_file:
+                video_content = video_file.read()
+                video_column.append(video_content)
+        df = pd.DataFrame({
+            'video_id': video_id_column,
+            'video': video_column
+        })
+        df.to_parquet(output_filename, index=False)
 
         path_in_repo = output_filename
         push_file_to_hf(self.hf_token, self.hf_ds_repo_id, output_filename, path_in_repo)
