@@ -11,6 +11,7 @@ from vidfetch.api.huggingface import push_file_to_hf
 import tarfile
 import pandas as pd
 from moviepy.editor import VideoFileClip
+import psutil
 
 
 class YoutubeVideoDataset(VideoDataset):
@@ -175,6 +176,9 @@ class YoutubeVideoDataset(VideoDataset):
 
         self.cur_fetch_video_num = self.cur_fetch_video_num + 1
         print(f"download_video success, num: {self.cur_fetch_video_num}, video_id: {video_id}, page_token: {page_token}")
+        memory = psutil.virtual_memory()
+        disk_usage = psutil.disk_usage('/')
+        print(f"Available memory: {memory.available / (1024 * 1024)} MB, Disk free space: {disk_usage.free / (1024 * 1024)} MB")
         video_info_dict = {
             # "md5": md5,
             "uid": video_id,
